@@ -101,6 +101,7 @@ function Calendar({ setSelectedDates, setOpened, isOpened }) {
     date.getFullYear()
   );
 
+  const lastDayOfFirstMonth = currentMonthArray.length;
   const bothMonthsArray = [...currentMonthArray, ...nextMonthArray];
 
   /* Select Logic */
@@ -163,15 +164,29 @@ function Calendar({ setSelectedDates, setOpened, isOpened }) {
   };
 
   /* Html parsing */
-  const bothMonthsHtml = bothMonthsArray.map((date, index) => (
-    <div
-      key={index}
-      onMouseEnter={() => handleDateHover(index)}
-      onClick={() => handleDateClick(index)}
-    >
-      {date.getDate()} - {JSON.stringify(checkItemSelected(index))}
-    </div>
-  ));
+  const currentMonthHtml = currentMonthArray.map((date, index) => {
+    return (
+      <div
+        key={index}
+        onMouseEnter={() => handleDateHover(index)}
+        onClick={() => handleDateClick(index)}
+      >
+        {date.getDate()} - {JSON.stringify(checkItemSelected(index))}
+      </div>
+    );
+  });
+  const nextMonthHtml = currentMonthArray.map((date, index) => {
+    return (
+      <div
+        key={lastDayOfFirstMonth + index}
+        onMouseEnter={() => handleDateHover(lastDayOfFirstMonth + index)}
+        onClick={() => handleDateClick(lastDayOfFirstMonth + index)}
+      >
+        {date.getDate()} -{' '}
+        {JSON.stringify(checkItemSelected(lastDayOfFirstMonth + index))}
+      </div>
+    );
+  });
 
   const header = formatHeaderDates(date);
   /* TODO: Format to UTC */
@@ -196,7 +211,8 @@ function Calendar({ setSelectedDates, setOpened, isOpened }) {
         <button onClick={nextMonth}>Next</button>
       </div>
       <div className="calendar">
-        <div>{bothMonthsHtml}</div>
+        <section>m1: {currentMonthHtml}</section>
+        <section>m2: {nextMonthHtml}</section>
       </div>
     </div>
   );
